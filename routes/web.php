@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\SignInController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
+use App\Http\Controllers\Auth\SignOutController;
 use App\Http\Controllers\Error\ErrorController;
+use App\Http\Controllers\Dashboard\Masters\Agent\AgentController;
+use App\Http\Controllers\Dashboard\Masters\CostingCharges\CostingChargesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +30,29 @@ Route::prefix('error')->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/sign-out', [SignOutController::class, 'process'])->name('signout.process');
+
     Route::get('/', function () {
         return 'Hello World';
     })->name('dashboard');
+
+    Route::prefix('master')->group(function () { 
+        Route::prefix('agent')->group(function () { 
+            Route::controller(AgentController::class)->group(function () {
+                Route::get('/create', 'showAgentCreation')->name('master.agent.create.show');
+                Route::post('/create', 'processAgentCreation')->name('master.agent.create.process');
+            });
+        });
+    });
+
+    Route::prefix('master')->group(function () { 
+        Route::prefix('costing-charges')->group(function () { 
+            Route::controller(CostingChargesController::class)->group(function () {
+                Route::get('/create', 'showCostingChargesCreation')->name('master.costing-charges.create.show');
+                Route::post('/create', 'processCostingChargesCreation')->name('master.costing-charges.create.process');
+            });
+        });
+    });
 });
 
 

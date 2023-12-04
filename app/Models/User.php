@@ -7,6 +7,17 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\AuditLog as Log;
 use App\Models\PasswordReset; 
+use App\Models\CostingChargesMaster;
+use App\Models\JobServicesMaster;
+use App\Models\LeadSourcesMaster;
+use App\Models\ModesMaster;
+use App\Models\QuotationChargesMaster;
+use App\Models\ServicesMaster;
+use App\Models\SurveyChecklistMaster;
+use App\Models\TypesMaster;
+use App\Models\AgentsMaster;
+use App\Models\ClientsMaster;
+
 
 class User extends Authenticatable
 {
@@ -50,4 +61,111 @@ class User extends Authenticatable
     {
         return $this->hasOne(PasswordReset::class, 'email');
     }
+
+    public function coastingChargesMasters()
+    {
+        return $this->hasMany(CostingChargesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedCoastingChargesMasters()
+    {
+        return $this->hasMany(CostingChargesMaster::class, 'updated_by');
+    }
+
+    public function jobServicesMasters()
+    {
+        return $this->hasMany(JobServicesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedJobServicesMasters()
+    {
+        return $this->hasMany(JobServicesMaster::class, 'updated_by');
+    }
+
+    public function leadSourcesMasters()
+    {
+        return $this->hasMany(LeadSourcesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedLeadSourcesMasters()
+    {
+        return $this->hasMany(LeadSourcesMaster::class, 'updated_by');
+    }
+   public function modesMasters()
+    {
+        return $this->hasMany(ModesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedModesMasters()
+    {
+        return $this->hasMany(ModesMaster::class, 'updated_by');
+    }
+
+    public function quotationChargesMasters()
+    {
+        return $this->hasMany(QuotationChargesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedQuotationChargesMasters()
+    {
+        return $this->hasMany(QuotationChargesMaster::class, 'updated_by');
+    }
+    public function servicesMasters()
+    {
+        return $this->hasMany(ServicesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedServicesMasters()
+    {
+        return $this->hasMany(ServicesMaster::class, 'updated_by');
+    }
+    
+    public function surveyChecklistMasters()
+    {
+        return $this->hasMany(SurveyChecklistMaster::class, 'created_by');
+    }
+
+   
+    public function updatedSurveyChecklistMasters()
+    {
+        return $this->hasMany(SurveyChecklistMaster::class, 'updated_by');
+    }
+
+public function typesMasters()
+    {
+        return $this->hasMany(TypesMaster::class, 'created_by');
+    }
+
+   
+    public function updatedTypesMasters()
+    {
+        return $this->hasMany(TypesMaster::class, 'updated_by');
+    }
+
+    public function agentsMasters()
+    {
+        return $this->hasMany(AgentsMaster::class, 'created_by');
+    }
+
+    public function updatedAgentsMasters()
+    {
+        return $this->hasMany(AgentsMaster::class, 'updated_by');
+    }
+
+    public function clientsMasters()
+    {
+        return $this->hasMany(ClientsMaster::class, 'created_by');
+    }
+
+    public function updatedClientsMasters()
+    {
+        return $this->hasMany(ClientsMaster::class, 'updated_by');
+    }
+    
 }
