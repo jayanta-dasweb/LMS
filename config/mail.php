@@ -45,6 +45,10 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'sendgrid' => [
+            'transport' => 'sendgrid',
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
@@ -78,6 +82,7 @@ return [
                 'log',
             ],
         ],
+            
     ],
 
     /*

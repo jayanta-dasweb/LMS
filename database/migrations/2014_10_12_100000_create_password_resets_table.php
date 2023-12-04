@@ -16,7 +16,10 @@ return new class extends Migration
         Schema::create('password_resets', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->timestamps();
+            
+            // Add foreign key relationship with the users table
+            $table->foreign('email')->references('email')->on('users')->onDelete('cascade');
         });
     }
 
