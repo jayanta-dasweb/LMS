@@ -24,8 +24,8 @@
                         <label class="required form-label">Costing Charges Name</label>
                         <!--end::Label-->
                         <!--begin::Input-->
-                        <input type="text" name="category_name" class="form-control mb-2"
-                            placeholder="Costing Charges name" value="" />
+                        <input type="text" name="name" class="form-control mb-2" placeholder="Costing Charges name"
+                            value="" />
                         <!--end::Input-->
                         <!--begin::Description-->
                         <div class="text-muted fs-7">A Costing Charges name is required and recommended to be unique.</div>
@@ -39,7 +39,7 @@
                         <!--end::Label-->
                         <!--begin::Select2-->
                         <select class="form-select mb-2" data-control="select2" data-hide-search="true"
-                            data-placeholder="Select an option" id="kt_ecommerce_add_category_status_select">
+                            data-placeholder="Select an option" id="kt_ecommerce_add_category_status_select" name="status">
                             <option></option>
                             <option value="active" selected>Active</option>
                             <option value="deactivate">Deactivate</option>
@@ -62,12 +62,16 @@
                 <!--end::Button-->
                 <!--begin::Button-->
                 <button type="submit" id="kt_ecommerce_add_category_submit" class="btn btn-primary">
+                    <!--begin::Indicator label-->
                     <span class="indicator-label">
-                        Save Changes
+                        Save
                     </span>
+                    <!--end::Indicator label-->
+                    <!--begin::Indicator progress-->
                     <span class="indicator-progress">
                         Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </span>
+                    <!--end::Indicator progress-->
                 </button>
                 <!--end::Button-->
             </div>
@@ -276,10 +280,10 @@
                 validator = FormValidation.formValidation(
                     form, {
                         fields: {
-                            'category_name': {
+                            'name': {
                                 validators: {
                                     notEmpty: {
-                                        message: 'Category name is required'
+                                        message: 'Name is required'
                                     }
                                 }
                             }
@@ -296,25 +300,31 @@
                 );
 
                 // Handle submit button
-                submitButton.addEventListener('click', e => {
+               form.addEventListener('submit', function (e) {
                     e.preventDefault();
 
-                    // Validate form before submit
-                    if (validator) {
-                        validator.validate().then(function(status) {
-                            console.log('validated!');
+                    validator.validate().then(function(status) {
 
-                            if (status == 'Valid') {
-                                submitButton.setAttribute('data-kt-indicator', 'on');
+                        if (status === 'Valid') {
 
-                                // Disable submit button whilst loading
-                                submitButton.disabled = true;
+                            submitButton.setAttribute('data-kt-indicator', 'on');
 
-                                setTimeout(function() {
-                                    submitButton.removeAttribute('data-kt-indicator');
+                            // Disable submit button whilst loading
+                            submitButton.disabled = true;
+                            // Perform Ajax request
+                            $.ajax({
+                                url: '{{ route("master.costing-charges.create.process") }}', // Replace with your actual route
+                                method: 'POST',
+                                data: $('#kt_ecommerce_add_category_form').serialize(),
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
+                                },
+                                success: function(response) {
 
+                                    console.log('Success:', response);
                                     Swal.fire({
-                                        text: "Form has been successfully submitted!",
+                                        text: response.message,
                                         icon: "success",
                                         buttonsStyling: false,
                                         confirmButtonText: "Ok, got it!",
@@ -323,28 +333,47 @@
                                         }
                                     }).then(function(result) {
                                         if (result.isConfirmed) {
-                                            // Enable submit button after loading
+                                            form.reset();
+                                            submitButton.removeAttribute(
+                                                'data-kt-indicator');
                                             submitButton.disabled = false;
-
-                                            // Redirect to customers list page
-                                            window.location = form.getAttribute(
-                                                "data-kt-redirect");
                                         }
                                     });
-                                }, 2000);
-                            } else {
-                                Swal.fire({
-                                    text: "Sorry, looks like there are some errors detected, please try again.",
-                                    icon: "error",
-                                    buttonsStyling: false,
-                                    confirmButtonText: "Ok, got it!",
-                                    customClass: {
-                                        confirmButton: "btn btn-primary"
-                                    }
-                                });
-                            }
-                        });
-                    }
+                                },
+                                error: function(xhr, status, error) {
+
+                                    // Handle errors
+                                    console.error('Error:', xhr.responseText);
+                                    var errorMessage = xhr.responseJSON.message;
+                                    Swal.fire({
+                                        text: errorMessage,
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn btn-primary"
+                                        }
+                                    });
+                                    submitButton.removeAttribute(
+                                        'data-kt-indicator');
+                                    submitButton.disabled = false;
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                text: "Sorry, looks like there are some errors detected, please try again.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            submitButton.removeAttribute(
+                                'data-kt-indicator');
+                            submitButton.disabled = false;
+                        }
+                    });
                 })
             }
 

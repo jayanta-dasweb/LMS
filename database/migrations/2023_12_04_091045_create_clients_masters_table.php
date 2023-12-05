@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('pincode')->nullable();
             $table->foreignId('agent_id')->constrained('agents_masters');
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('status', ['active', 'deactivate'])->default('active');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->timestamps();

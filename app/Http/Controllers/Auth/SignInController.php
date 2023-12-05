@@ -31,7 +31,7 @@ class SignInController extends Controller
 
             return response()->json([
                 'success' => true,
-                'redirectUrl' => route('dashboard'), // Change to your desired redirect URL
+                'redirectUrl' => route('master.costing-charges.create.process'), // Change to your desired redirect URL
             ]);
         } else {
             return response()->json([

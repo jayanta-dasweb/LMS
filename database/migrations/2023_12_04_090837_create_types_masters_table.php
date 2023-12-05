@@ -18,7 +18,7 @@ return new class extends Migration
              $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->string('name')->unique();
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('status', ['active', 'deactivate'])->default('active');
             $table->timestamps();
         });
     }
